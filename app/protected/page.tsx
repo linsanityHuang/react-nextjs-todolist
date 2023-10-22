@@ -6,7 +6,7 @@ export default function Home() {
       <div className="w-screen h-screen flex flex-col space-y-5 justify-center items-center">
         <TodoList />
         <div className="absolute bottom-5 w-full flex justify-center items-center">
-          <SignOut />
+        <SignOut />
         </div>
       </div>
     </div>

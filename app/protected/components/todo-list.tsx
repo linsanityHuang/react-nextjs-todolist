@@ -6,6 +6,8 @@ import { ItodoItem } from "types";
 import { toast } from "react-hot-toast";
 import LoadingDots from "@/components/loading-dots";
 
+const MAX_TODO_NUMS = 5;
+
 const TodoList = () => {
   const [todos, setTodos] = useState<ItodoItem[]>([]);
   const [inputValue, setInputValue] = useState("");
@@ -21,15 +23,16 @@ const TodoList = () => {
     if (userId) {
       setUserId(userId);
       fetch(`/api/todo?userId=${userId}`, { method: "GET" }).then(async (res) => {
-        const todo = (await res.json()) as ItodoItem[];
-        setTodos(todo);
+        const todos = (await res.json()) as ItodoItem[];
+        setTodos(todos);
       });
     }
   }, [session]);
 
+  // 添加待办事项
   const handleAddTodo = async () => {
     if (loading) return;
-    if (todos.length > 4) {
+    if (todos.length >= MAX_TODO_NUMS) {
       toast.error("The number of todos exceeds five");
       return;
     }
@@ -53,6 +56,8 @@ const TodoList = () => {
   };
 
   const handleDeleteTodo = async (index: number) => {
+    // todos ['a', 'b', 'c'] index 0
+    // newTodos ['b', 'c']
     const newTodos = todos.filter((_, i) => i !== index);
     setTodos(newTodos);
     await fetch(`/api/todo?id=${todos[index].id}`, {
@@ -62,11 +67,14 @@ const TodoList = () => {
       },
     });
   };
+
+  // 回车键
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.keyCode === 13) {
       handleAddTodo();
     }
   };
+
   const checkTodo = async (index: number, complete: boolean) => {
     const updatedTodos = todos.map((todo, i) => {
       if (i === index) {
@@ -97,7 +105,7 @@ const TodoList = () => {
           value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          placeholder="Add a new todo"
+          placeholder={todos.length >= MAX_TODO_NUMS ? 'The number of todos exceeds five': 'Add a new todo' }
           className="border border-gray-300 rounded-lg px-4 py-2 mr-2 flex-grow text-gray-600"
         />
         <button onClick={handleAddTodo} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-center w-[80px]">

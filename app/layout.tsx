@@ -12,8 +12,8 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const title = "Next.js Prisma Postgres Auth Starter";
-const description = "This is a Next.js starter kit that uses Next-Auth for simple email + password login and a Postgres database to persist the data.";
+const title = "Todo";
+const description = "todo";
 
 export const metadata: Metadata = {
   title,
@@ -33,7 +33,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={inter.variable}>
         <Toaster />
         <Suspense fallback="Loading...">
-          {/* @ts-expect-error Async Server Component */}
           <AuthStatus />
         </Suspense>
         <NextAuthProvider>{children}</NextAuthProvider>
